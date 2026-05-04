@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><%= isEdit ? 'Edit Product' : 'Add Product' %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5 mb-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 card p-4 shadow-sm">
+                <h3 class="mb-3 text-center"><%= isEdit ? 'Edit Product' : 'Add New Product' %></h3>
+                <form action="<%= isEdit ? '/edit' : '/add' %>" method="POST" enctype="multipart/form-data">
+                    
+                    <% if(isEdit) { %>
+                        <input type="hidden" name="id" value="<%= product.id %>">
+                        <input type="hidden" name="old_image" value="<%= product.image %>">
+                    <% } %>
+
+                    <div class="mb-3">
+                        <label class="form-label">Name</label>
+                        <input type="text" class="form-control" name="name" value="<%= isEdit ? product.name : '' %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Category</label>
+                        <input type="text" class="form-control" name="category" value="<%= isEdit ? product.category : '' %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Price</label>
+                        <input type="number" class="form-control" name="price" min="0" step="0.01" value="<%= isEdit ? product.price : '' %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Stock</label>
+                        <input type="number" class="form-control" name="stock" min="0" value="<%= isEdit ? product.stock : '' %>" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Image Upload</label>
+                        <input type="file" class="form-control" name="image" id="imageInput" accept="image/*" <%= isEdit ? '' : 'required' %>>
+                        
+                        <div class="mt-3 text-center">
+                            <% if (isEdit && product.image) { %>
+                            <img id="imagePreview" src="/uploads/<%= product.image %>" class="img-thumbnail" style="max-width: 200px;" alt="Image Preview">
+                            <% } else { %>
+                            <img id="imagePreview" src="#" class="img-thumbnail" style="max-width: 200px; display:none;" alt="Image Preview">
+                            <% } %>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-success">Save</button>
+                        <a href="/" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('imageInput').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const preview = document.getElementById('imagePreview');
+                preview.src = URL.createObjectURL(file); 
+                preview.style.display = 'inline-block'; 
+            }
+        });
+    </script>
+</body>
+</html>
